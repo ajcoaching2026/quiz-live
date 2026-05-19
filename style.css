@@ -1,0 +1,36 @@
+body {
+  font-family: Arial;
+  background: #f2f2f2;
+  padding: 20px;
+}
+
+.quiz-container {
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#question {
+  margin-bottom: 20px;
+}
+
+.option-btn {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #e0e0e0;
+}
+
+#timer {
+  text-align: center;
+  color: red;
+  margin-top: 20px;
+  
+  
+}
