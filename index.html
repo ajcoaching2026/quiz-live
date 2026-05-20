@@ -8,44 +8,73 @@
 </head>
 <body>
 
-    <div id="timer-panel" class="wrapper">
-        <div id="timer">⏱️ Time Left: 30:00</div>
+    <div class="app-bar">
+        <span class="back-arrow">&#8592;</span>
+        <h2 class="subject-title">Practice Test Series</h2>
+        <span class="menu-icon">&#8942;</span>
     </div>
 
-    <div id="quiz-box" class="wrapper">
-        <h3 id="question-text">Loading standard exam profile...</h3>
-        <div id="options-container"></div>
-        <button id="next-btn" onclick="nextQuestion()">Next Question ➡️</button>
-        <button id="submit-quiz-btn" onclick="calculateResult()" style="display:none;">Submit Test 🏁</button>
+    <div class="stats-bar">
+        <div id="timer" class="stat-item">⏱️ 00:30:00</div>
+        <div id="progress-header" class="stat-item">📝 40 Questions</div>
     </div>
 
-    <div id="result-container" class="wrapper" style="display: none;">
-        <div class="result-header">
-            <h2>🏆 SCORECARD REPORT</h2>
-            <div class="score-badge">
-                <span>TOTAL SCORE</span>
-                <h1 id="score">0 / 120</h1>
+    <div class="container">
+        <div id="loading-profile">⚡ Loading Test Profile from Google Sheets...</div>
+
+        <div id="quiz-box" style="display: none;">
+            <div id="question-text" class="question-card">Sawaal load ho raha hai...</div>
+            
+            <div id="options-container"></div>
+
+            <div class="bottom-nav">
+                <button id="prev-btn" class="nav-btn btn-secondary">⬅️ Previous</button>
+                <button id="clear-btn" class="nav-btn btn-clear">🧼 Clear</button>
+                <button id="next-btn" class="nav-btn btn-primary">Next ➡️</button>
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card"><h3>Total Que</h3><p id="stat-total">40</p></div>
-            <div class="stat-card"><h3>Attempted</h3><p id="stat-attempted">0</p></div>
-            <div class="stat-card"><h3>Correct</h3><p id="stat-correct" style="color:#2ec771;">0</p></div>
-            <div class="stat-card"><h3>Wrong</h3><p id="stat-wrong" style="color:#e74c3c;">0</p></div>
-            <div class="stat-card"><h3>Skipped</h3><p id="stat-skipped" style="color:#f39c12;">0</p></div>
-            <div class="stat-card"><h3>Accuracy</h3><p id="stat-accuracy">0%</p></div>
-        </div>
-
-        <button class="action-btn-review" onclick="toggleReview()">🔍 Review Questions & Explanations</button>
-        <button class="action-btn-restart" onclick="location.reload()">🔄 Re-take Test</button>
-
-        <div id="review-section" style="display: none; margin-top: 25px;">
-            <hr style="border: 1px solid #ddd; margin-bottom: 20px;">
-            <h2 style="color:#2c3e50; text-align:center; margin-bottom: 20px;">📝 Question Paper Review</h2>
-            <div id="review-list"></div>
+        <div id="result-box" class="scorecard-container" style="display: none;">
+            <h3>📊 Test Scorecard</h3>
+            <div class="score-display">
+                <span class="score-number" id="score-marks">0</span>
+                <span class="score-label">Total Marks</span>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-box correct"><span id="score-correct">0</span><p>Correct</p></div>
+                <div class="stat-box wrong"><span id="score-wrong">0</span><p>Wrong</p></div>
+                <div class="stat-box skipped"><span id="score-skipped">0</span><p>Skipped</p></div>
+            </div>
+            <button class="action-btn-primary" onclick="toggleReview()">🔍 Review Questions & Explanations</button>
+            <button class="action-btn-secondary" onclick="retakeTest()">🔄 Re-take Test</button>
+            
+            <div id="review-panel" style="display: none;">
+                <hr style="border: 1px solid #ddd; margin-bottom: 20px;">
+                <h2 style="color:#2c3e50; text-align:center; margin-bottom: 20px;">📝 Question Paper Review</h2>
+                <div id="review-list"></div>
+            </div>
         </div>
     </div>
 
+    <div id="fab-grid-btn" class="fab-btn" onclick="openDrawer()">
+        <span>☰</span>
+        <div id="fab-badge" class="fab-badge">...</div>
+    </div>
+
+    <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+    <div id="question-drawer" class="question-drawer">
+        <div class="drawer-header">
+            <h3>All Questions</h3>
+            <button class="close-drawer-btn" onclick="closeDrawer()">✕</button>
+        </div>
+        <div class="drawer-legend">
+            <span class="legend-item"><span class="dot current"></span> Current</span>
+            <span class="legend-item"><span class="dot attempted"></span> Attempted</span>
+            <span class="legend-item"><span class="dot unattempted"></span> Pending</span>
+        </div>
+        <div id="questions-grid" class="questions-grid"></div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
