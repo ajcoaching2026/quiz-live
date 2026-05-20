@@ -1,31 +1,51 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Quiz App</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Practice Test Portal</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <div class="quiz-container">
-
-    <h2 id="question">Question</h2>
-
-    <div id="options">
-      <button class="option-btn"></button>
-      <button class="option-btn"></button>
-      <button class="option-btn"></button>
-      <button class="option-btn"></button>
+    <div id="timer-panel" class="wrapper">
+        <div id="timer">⏱️ Time Left: 30:00</div>
     </div>
 
-    <h3 id="timer">30</h3>
+    <div id="quiz-box" class="wrapper">
+        <h3 id="question-text">Loading standard exam profile...</h3>
+        <div id="options-container"></div>
+        <button id="next-btn" onclick="nextQuestion()">Next Question ➡️</button>
+        <button id="submit-quiz-btn" onclick="calculateResult()" style="display:none;">Submit Test 🏁</button>
+    </div>
 
-  </div>
+    <div id="result-container" class="wrapper" style="display: none;">
+        <div class="result-header">
+            <h2>🏆 SCORECARD REPORT</h2>
+            <div class="score-badge">
+                <span>TOTAL SCORE</span>
+                <h1 id="score">0 / 120</h1>
+            </div>
+        </div>
 
-  <script src="script.js"></script>
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Total Que</h3><p id="stat-total">40</p></div>
+            <div class="stat-card"><h3>Attempted</h3><p id="stat-attempted">0</p></div>
+            <div class="stat-card"><h3>Correct</h3><p id="stat-correct" style="color:#2ec771;">0</p></div>
+            <div class="stat-card"><h3>Wrong</h3><p id="stat-wrong" style="color:#e74c3c;">0</p></div>
+            <div class="stat-card"><h3>Skipped</h3><p id="stat-skipped" style="color:#f39c12;">0</p></div>
+            <div class="stat-card"><h3>Accuracy</h3><p id="stat-accuracy">0%</p></div>
+        </div>
+
+        <button class="action-btn-review" onclick="toggleReview()">🔍 Review Questions & Explanations</button>
+        <button class="action-btn-restart" onclick="location.reload()">🔄 Re-take Test</button>
+
+        <div id="review-section" style="display: none; margin-top: 25px;">
+            <hr style="border: 1px solid #ddd; margin-bottom: 20px;">
+            <h2 style="color:#2c3e50; text-align:center; margin-bottom: 20px;">📝 Question Paper Review</h2>
+            <div id="review-list"></div>
+        </div>
+    </div>
 
 </body>
-<!-- update --->
-
 </html>
