@@ -1,313 +1,337 @@
-// 1. CONFIGURATION
-const SHEET_ID = '1g0ESwN7re5X-KaRraGMSdF0lu3Fff8ZJ2lsXjf4m9fQ';
+// ==========================================================================
+// 1. ENGINE CONFIGURATION & HIGH SECURITY ANTI-CHEAT GUARD (LATEST UPDATED)
+// ==========================================================================
+const SHEET_ID = '1AMoTh-nkZRgChqqsIrJlUNPQxSRnXNqxCV6ztt-NbbA'; 
 const SHEET_TITLE = 'Sheet1';
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_TITLE}`;
 
+// Direct Google Visualization API Link - Jo bina publish kiye direct access khol dega
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TITLE)}`;
+
+// [ANTI-CHEAT POINT 8]: URL Clean Up (ID Chupana) immediate hook execution
+(function cleanUrlGuard() {
+    if (window.history && window.history.replaceState) {
+        // Microsecond execution timeline par URL se core query parameters ko strip karke clean layout leave karega
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+})();
+
+// [ANTI-CHEAT POINT 8]: Absolute Input/Inspect Blockades
+document.addEventListener('keydown', function(e) {
+    // Blocks Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, F12, Ctrl+U (View Source)
+    if (e.keyCode == 123 || 
+        (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || 
+        (e.ctrlKey && e.keyCode == 85)) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// [ANTI-CHEAT POINT 8]: Text Copy & Drag Inhibition Selection Rules
+document.addEventListener('selectstart', (e) => e.preventDefault());
+document.addEventListener('copy', (e) => e.preventDefault());
+document.addEventListener('dragstart', (e) => e.preventDefault());
+
+// Core runtime memory arrays
 let quizData = [];
+let userAnswers = [];
 let currentQuestionIndex = 0;
-let totalTime = 30 * 60; // 30 Minutes
 let timerInterval;
-let userAnswers = []; // Tracker for choices
-let isSubmitted = false; // Flag to check if test is over
+let totalSeconds = 0; // Dynamic Calculated
+let globalTelegramLink = "https://t.me/AJHinglishAcademy"; 
 
-const optionPrefixes = ['A. ', 'B. ', 'C. ', 'D. '];
-
-// 2. FETCH DATA FROM GOOGLE SHEET
+// ==========================================================================
+// 2. DYNAMIC AUTOMATIC SHEET PARSING & METRIC CALCULATIONS ENGINE
+// ==========================================================================
 async function loadQuizData() {
     try {
         const response = await fetch(SHEET_URL);
+        if (!response.ok) throw new Error("Data stream unavailable");
+        
         const text = await response.text();
         const json = JSON.parse(text.substr(47).slice(0, -2));
         const rows = json.table.rows;
 
-        const allQuestions = rows.map(row => {
+        if (!rows || rows.length === 0) {
+            document.getElementById('loading-profile').innerText = "Empty database rows layout structured!";
+            return;
+        }
+
+        // --- AUTOMATIC EXTRACTION FROM ROW 2 (Index 0 of data rows) ---
+        let detectedExamName = "RPSC Premium Practice Set";
+        const row2 = rows[0];
+        if (row2 && row2.c) {
+            if (row2.c[15] && row2.c[15].v) {
+                detectedExamName = row2.c[15].v; // Column P: Exam Name
+            }
+            if (row2.c[16] && row2.c[16].v) {
+                globalTelegramLink = row2.c[16].v; // Column Q: Telegram Link
+            }
+        }
+
+        // --- AUTOMATIC MAPPING FROM GOOGLE SHEET COLUMNS ---
+        quizData = rows.map((row) => {
+            if (!row || !row.c || !row.c[1]) return null; // Agar Question Text blank h toh line drop out kardo
             return {
-                question: row.c[0] ? row.c[0].v : '',
-                optionA: row.c[1] ? row.c[1].v : '',
-                optionB: row.c[2] ? row.c[2].v : '',
-                optionC: row.c[3] ? row.c[3].v : '',
-                optionD: row.c[4] ? row.c[4].v : '',
-                correct: row.c[5] ? row.c[5].v : '',
-                explanation: row.c[6] ? row.c[6].v : 'No explanation available.'
+                question: row.c[1] ? row.c[1].v : '',        // Column B: Full Question
+                option1: row.c[2] ? row.c[2].v : 'Option 1',  // Column C
+                option2: row.c[3] ? row.c[3].v : 'Option 2',  // Column D
+                option3: row.c[4] ? row.c[4].v : 'Option 3',  // Column E
+                option4: row.c[5] ? row.c[5].v : 'Option 4',  // Column F
+                option5: "Question not attempted",           // FIXED English Option 5
+                explanation: row.c[7] ? row.c[7].v : '',     // Column H: Solution
+                additional: row.c[8] ? row.c[8].v : '',      // Column I: Extra Key Facts
+                correctKey: row.c[13] ? parseInt(row.c[13].v) : null // Column N: Master Key (1,2,3,4)
             };
-        });
+        }).filter(q => q !== null && q.question.toString().trim() !== '');
 
-        // ⭐ STRICT LIMIT: Sheet mein chahe jitne hon, hum sirf top ke 60 uthayenge
-        quizData = allQuestions.slice(0, 60);
+        // Slice up to maximum 60 rows safely for evaluation data bounds
+        quizData = quizData.slice(0, 60);
+        const qCount = quizData.length;
 
-        if (quizData.length > 0) {
-            userAnswers = new Array(quizData.length).fill(null);
+        if (qCount > 0) {
+            userAnswers = new Array(qCount).fill(null);
+
+            // --- FORMULA MATHEMATICS FORMULATIONS ---
+            const calculatedTotalMarks = qCount * 3; // Questions × 3 Marks
+            const calculatedSeconds = qCount * 40;   // Questions × 40 Seconds Rule
+            totalSeconds = calculatedSeconds;        // Commit runtime memory duration
+
+            // Seconds to proper reading human minutes formatting conversion
+            const displayMins = Math.floor(calculatedSeconds / 60);
+            const displaySecs = calculatedSeconds % 60;
+            const timeStringHTML = displaySecs > 0 ? `${displayMins} Mins ${displaySecs} Secs` : `${displayMins} Minutes`;
+
+            // --- UI BINDING INSTRUCTIONS TEXT FIELDS ---
+            document.getElementById('ins-exam-name').innerText = detectedExamName;
+            document.getElementById('ins-total-q').innerText = qCount;
+            document.getElementById('ins-total-marks').innerText = calculatedTotalMarks;
+            document.getElementById('ins-total-time').innerText = timeStringHTML;
+
+            // Trigger Transition Screens
             document.getElementById('loading-profile').style.display = 'none';
-            document.getElementById('quiz-box').style.display = 'block';
-            
-            // Set FAB Badge total to 60
-            document.getElementById('fab-badge').innerText = quizData.length;
-            
-            startTimer();
-            buildDrawerGrid();
-            showQuestion(0);
+            document.getElementById('instructions-screen').style.display = 'block';
+
+            // Click interaction architecture setup for Start Button
+            document.getElementById('start-exam-btn').onclick = () => {
+                document.getElementById('instructions-screen').style.display = 'none';
+                document.getElementById('quiz-screen').style.display = 'block';
+                document.getElementById('timer-wrapper').style.display = 'flex';
+                
+                startTimerEngine();
+                buildGridDrawerMatrix();
+                showQuestionLayout(0);
+            };
+
+            // Setup explicit navigation standard click nodes
+            document.getElementById('prev-btn').onclick = () => showQuestionLayout(currentQuestionIndex - 1);
+            document.getElementById('next-btn').onclick = () => showQuestionLayout(currentQuestionIndex + 1);
+            document.getElementById('clear-btn').onclick = clearSelectedAnswers;
+            document.getElementById('submit-btn').onclick = processExamSubmission;
+
         } else {
-            document.getElementById('loading-profile').innerText = "No questions found in sheet!";
+            document.getElementById('loading-profile').innerText = "Database mapping error: Questions missing or structural schema conflict!";
         }
     } catch (error) {
-        console.error("Error loading sheet data:", error);
-        document.getElementById('loading-profile').innerText = "Error loading exam profile. Please refresh.";
+        console.error("Critical Execution Interruption: ", error);
+        document.getElementById('loading-profile').innerText = "Connection error. Please cross check sheet access controls.";
     }
 }
 
-// 3. TIMER FUNCTION
-function startTimer() {
-    const timerElement = document.getElementById('timer');
-    timerInterval = setInterval(() => {
-        let minutes = Math.floor(totalTime / 60);
-        let seconds = totalTime % 60;
-        timerElement.innerText = `⏱️ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+// ==========================================================================
+// 3. REAL-TIME RENDERING INTERFACE & NAVIGATION LOCKS
+// ==========================================================================
+function showQuestionLayout(index) {
+    currentQuestionIndex = index;
+    const q = quizData[index];
+    
+    // Clean Question Indicator Rendering Engine (E.g., "Question 1")
+    document.getElementById('current-question-num').innerText = `Question ${index + 1}`;
+    document.getElementById('question-text').innerText = q.question;
+    
+    const optionsWrapper = document.getElementById('options-container');
+    optionsWrapper.innerHTML = '';
+
+    const arrayOptions = [q.option1, q.option2, q.option3, q.option4, q.option5];
+    
+    arrayOptions.forEach((textString, i) => {
+        const optionIdNumber = i + 1;
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span><b>(${optionIdNumber})</b></span> <span>${textString}</span>`;
         
-        if (totalTime <= 0) {
-            clearInterval(timerInterval);
-            submitQuiz();
+        if (userAnswers[index] === optionIdNumber) {
+            btn.classList.add('selected');
         }
-        totalTime--;
+        
+        btn.onclick = () => registerUserChoice(optionIdNumber);
+        optionsWrapper.appendChild(btn);
+    });
+
+    // NAVIGATION LOCK SYSTEM: Disable bounds limits checking rules
+    document.getElementById('prev-btn').disabled = (index === 0);
+    document.getElementById('next-btn').disabled = (index === quizData.length - 1);
+
+    buildGridDrawerMatrix(); // Keeps active class refreshed in matrix
+}
+
+function registerUserChoice(optionNumber) {
+    userAnswers[currentQuestionIndex] = optionNumber;
+    showQuestionLayout(currentQuestionIndex);
+}
+
+function clearSelectedAnswers() {
+    userAnswers[currentQuestionIndex] = null;
+    showQuestionLayout(currentQuestionIndex);
+}
+
+// ==========================================================================
+// 4. ACTIVE LIVE COUNTDOWN TIMER ENGINE
+// ==========================================================================
+function startTimerEngine() {
+    timerInterval = setInterval(() => {
+        if (totalSeconds <= 0) {
+            clearInterval(timerInterval);
+            autoForceSubmission();
+            return;
+        }
+        totalSeconds--;
+        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds = String(totalSeconds % 60).padStart(2, '0');
+        document.getElementById('timer-display').innerText = `${hours}:${minutes}:${seconds}`;
     }, 1000);
 }
 
-// 4. DISPLAY QUESTION & OPTIONS
-function showQuestion(index) {
-    currentQuestionIndex = index;
-    const q = quizData[index];
+function autoForceSubmission() {
+    alert("Time out! Test is being submitted automatically.");
+    executeEvaluationCalculation();
+}
 
-    document.getElementById('progress-header').innerText = `📝 Q: ${index + 1}/${quizData.length}`;
-    document.getElementById('question-text').innerText = q.question;
-
-    const optionsContainer = document.getElementById('options-container');
-    optionsContainer.innerHTML = '';
-
-    const options = [q.optionA, q.optionB, q.optionC, q.optionD];
-    const optionKeys = ['optionA', 'optionB', 'optionC', 'optionD'];
-
-    options.forEach((optText, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerText = `${optionPrefixes[i]}${optText}`;
-
-        if (userAnswers[index] === optionKeys[i]) {
-            btn.classList.add('selected');
-        }
-
-        btn.onclick = () => {
-            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            userAnswers[index] = optionKeys[i];
-            updateGridStatus();
-        };
-
-        optionsContainer.appendChild(btn);
-    });
-
-    document.getElementById('prev-btn').disabled = (index === 0);
-    document.getElementById('prev-btn').onclick = () => showQuestion(index - 1);
-    
-    document.getElementById('clear-btn').onclick = () => {
-        userAnswers[index] = null;
-        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-        updateGridStatus();
-    };
-
-    const nextBtn = document.getElementById('next-btn');
-    if (index === quizData.length - 1) {
-        nextBtn.innerHTML = '🚀 Submit';
-        nextBtn.onclick = () => {
-            if (confirm("Are you sure you want to submit the test?")) {
-                submitQuiz();
-            }
-        };
-    } else {
-        nextBtn.innerHTML = 'Next ➡️';
-        nextBtn.onclick = () => showQuestion(index + 1);
+function processExamSubmission() {
+    if (confirm("Are you absolutely sure you want to finish and submit this test?")) {
+        clearInterval(timerInterval);
+        executeEvaluationCalculation();
     }
-
-    updateGridStatus();
 }
 
-// 5. DRAWER NAVIGATION LOGIC
-function openDrawer() {
-    document.getElementById('drawer-overlay').style.display = 'block';
-    document.getElementById('question-drawer').style.right = '0';
-}
-
-function closeDrawer() {
-    document.getElementById('drawer-overlay').style.display = 'none';
-    document.getElementById('question-drawer').style.right = '-300px';
-}
-
-function buildDrawerGrid() {
-    const gridContainer = document.getElementById('questions-grid');
-    gridContainer.innerHTML = '';
-    
-    quizData.forEach((_, index) => {
-        const item = document.createElement('div');
-        item.id = `grid-item-${index}`;
-        item.className = 'grid-item';
-        item.innerText = index + 1;
+// ==========================================================================
+// 5. EVALUATION, MATRIX GENERATOR & MERGED EXPLANATIONS VIEW
+// ==========================================================================
+function buildGridDrawerMatrix() {
+    const grid = document.getElementById('drawer-grid');
+    grid.innerHTML = '';
+    quizData.forEach((_, i) => {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        gridItem.innerText = i + 1;
         
-        item.onclick = () => {
-            if (!isSubmitted) {
-                // Test chal raha hai toh question badlo
-                showQuestion(index);
-            } else {
-                // Test khatam ho gaya toh direct us review question par scroll karo
-                // Pehle review panel kholo agar band ho toh
-                const panel = document.getElementById('review-panel');
-                if (panel.style.display === 'none') {
-                    toggleReview();
-                }
-                const reviewTarget = document.getElementById(`review-item-${index}`);
-                if (reviewTarget) {
-                    reviewTarget.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-            closeDrawer();
+        if (userAnswers[i] !== null) gridItem.classList.add('attempted');
+        if (i === currentQuestionIndex) gridItem.classList.add('active');
+        
+        gridItem.onclick = () => {
+            showQuestionLayout(i);
+            toggleSideDrawer();
         };
-        gridContainer.appendChild(item);
+        grid.appendChild(gridItem);
     });
 }
 
-function updateGridStatus() {
-    quizData.forEach((_, index) => {
-        const item = document.getElementById(`grid-item-${index}`);
-        if (!item) return;
-
-        if (!isSubmitted) {
-            item.className = 'grid-item';
-            if (userAnswers[index] !== null) item.classList.add('attempted');
-            if (index === currentQuestionIndex) item.classList.add('current');
-        } else {
-            // Submit ke baad ka dynamic color status
-            item.className = 'grid-item';
-            const selectedKey = userAnswers[index];
-            if (!selectedKey) {
-                item.classList.add('res-skipped');
-            } else {
-                const selectedText = quizData[index][selectedKey].toString().trim().toLowerCase();
-                const correctText = quizData[index].correct.toString().trim().toLowerCase();
-                if (selectedText === correctText) {
-                    item.classList.add('res-correct');
-                } else {
-                    item.classList.add('res-wrong');
-                }
-            }
-        }
-    });
-}
-
-// 6. SCORE CALCULATION & SUBMIT
-function submitQuiz() {
-    clearInterval(timerInterval);
-    isSubmitted = true;
-    
-    document.getElementById('quiz-box').style.display = 'none';
-    document.getElementById('result-box').style.display = 'block';
-
-    // Top Header badal dete hain
-    document.getElementById('progress-header').innerText = `📊 Result Declared`;
-    document.getElementById('timer').innerText = `⏱️ Finished`;
-
-    let correctCount = 0;
-    let wrongCount = 0;
-    let skippedCount = 0;
-
-    quizData.forEach((q, index) => {
-        const selectedKey = userAnswers[index];
-        if (!selectedKey) {
-            skippedCount++;
-        } else {
-            const selectedText = q[selectedKey].toString().trim().toLowerCase();
-            const correctText = q.correct.toString().trim().toLowerCase();
-
-            if (selectedText === correctText) {
-                correctCount++;
-            } else {
-                wrongCount++;
-            }
-        }
-    });
-
-    const totalMarks = (correctCount * 3) - (wrongCount * 1);
-
-    document.getElementById('score-marks').innerText = totalMarks;
-    document.getElementById('score-correct').innerText = correctCount;
-    document.getElementById('score-wrong').innerText = wrongCount;
-    document.getElementById('score-skipped').innerText = skippedCount;
-
-    // Upgraded Drawer Legend text for Result Mode
-    const legendContainer = document.querySelector('.drawer-legend');
-    legendContainer.innerHTML = `
-        <div class="legend-row">
-            <span class="legend-item"><span class="dot result-correct"></span> Correct</span>
-            <span class="legend-item"><span class="dot result-wrong"></span> Wrong</span>
-            <span class="legend-item"><span class="dot unattempted"></span> Skipped</span>
-        </div>
-        <p style="font-size:11px; color:#1a73e8; margin-top:5px; text-align:center;">💡 Tap any number to jump to its explanation!</p>
-    `;
-
-    // Reset grid status with Red and Green colors
-    updateGridStatus();
-}
-
-// 7. REVIEW PANEL & JUMP RENDER
-function toggleReview() {
-    const panel = document.getElementById('review-panel');
-    if (panel.style.display === 'none' || panel.style.display === '') {
-        panel.style.display = 'block';
-        renderReview();
-        panel.scrollIntoView({ behavior: 'smooth' });
+function toggleSideDrawer() {
+    const drawer = document.getElementById('side-drawer');
+    const overlay = document.getElementById('drawer-overlay');
+    if (drawer.style.right === '0px') {
+        drawer.style.right = '-290px';
+        overlay.style.display = 'none';
     } else {
-        panel.style.display = 'none';
+        drawer.style.right = '0px';
+        overlay.style.display = 'block';
     }
 }
 
-function renderReview() {
-    const listContainer = document.getElementById('review-list');
-    listContainer.innerHTML = '';
+function executeEvaluationCalculation() {
+    let rightCount = 0;
+    let wrongCount = 0;
+    let skipCount = 0;
 
-    quizData.forEach((q, index) => {
-        const selectedKey = userAnswers[index];
-        const selectedText = selectedKey ? q[selectedKey] : 'Not Attempted / Skipped';
-        const correctText = q.correct;
-
-        let statusBadge = '';
-        if (!selectedKey) {
-            statusBadge = `<span class="badge skipped-badge">Skipped (0)</span>`;
-        } else if (selectedText.toString().trim().toLowerCase() === correctText.toString().trim().toLowerCase()) {
-            statusBadge = `<span class="badge correct-badge">🟢 Correct (+3)</span>`;
+    quizData.forEach((q, i) => {
+        const choice = userAnswers[i];
+        if (choice === null || choice === 5) {
+            skipCount++;
+        } else if (choice === q.correctKey) {
+            rightCount++;
         } else {
-            statusBadge = `<span class="badge wrong-badge">🔴 Wrong (-1)</span>`;
+            wrongCount++;
+        }
+    });
+
+    // Score evaluation algorithms formula check rules
+    const finalScore = (rightCount * 3) - (wrongCount * 1);
+    const maximumMarksPossible = quizData.length * 3;
+
+    // Transition Screens Display Setup
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('timer-wrapper').style.display = 'none';
+    const resultBox = document.getElementById('result-screen');
+    resultBox.style.display = 'block';
+
+    // Set metrics fields values
+    document.getElementById('res-total').innerText = quizData.length;
+    document.getElementById('res-correct').innerText = rightCount;
+    document.getElementById('res-wrong').innerText = wrongCount;
+    document.getElementById('res-unattempt').innerText = skipCount;
+    document.getElementById('res-score').innerText = finalScore.toFixed(2);
+    document.getElementById('res-max-score').innerText = maximumMarksPossible;
+
+    // Dynamic configuration inject for back channel Telegram hyper-redirect node link
+    const tgRedirectNode = document.getElementById('telegram-redirect-btn');
+    if (tgRedirectNode) {
+        tgRedirectNode.href = globalTelegramLink;
+    }
+
+    // REVIEW SOLUTION CARDS EXTRACTION GENERATOR BOX
+    const solutionWrapper = document.getElementById('review-solutions-box');
+    solutionWrapper.innerHTML = '';
+
+    quizData.forEach((q, i) => {
+        const blockNode = document.createElement('div');
+        blockNode.className = 'card review-card';
+        
+        let userDisplayValue = userAnswers[i] ? `Option ${userAnswers[i]}` : 'Not Attempted / Skipped';
+        if (userAnswers[i] === 5) userDisplayValue = "Option 5 (Question not attempted)";
+
+        const isCorrectMatch = (userAnswers[i] === q.correctKey);
+        if (userAnswers[i] === null || userAnswers[i] === 5) {
+            blockNode.style.borderLeft = "5px solid #f39c12"; // Amber for skipped items
+        } else if (isCorrectMatch) {
+            blockNode.classList.add('correct-block');
+        } else {
+            blockNode.classList.add('wrong-block');
         }
 
-        const item = document.createElement('div');
-        item.id = `review-item-${index}`; // ID for jumping scrolling
-        item.className = 'review-item';
-        item.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h4 style="margin: 0; color: #2c3e50;">Question ${index + 1}:</h4>
-                ${statusBadge}
-            </div>
-            <p style="font-size: 16px; margin-bottom: 12px; color: #333; font-weight: 500;">${q.question}</p>
-            <div class="review-answers">
-                <p><strong>Your Answer:</strong> <span style="color: ${selectedKey ? '#e74c3c' : '#7f8c8d'}">${selectedText}</span></p>
-                <p><strong>Correct Answer:</strong> <span style="color: #1e8e3e; font-weight: bold;">${correctText}</span></p>
-            </div>
-            <div class="review-explanation">
-                <strong>💡 Explanation / व्याख्या:</strong>
-                <p style="margin-top: 5px; color: #444; line-height: 1.5;">${q.explanation}</p>
+        blockNode.innerHTML = `
+            <h4><b>Q.${i + 1}:</b> ${q.question}</h4>
+            <div class="opts-line">1. ${q.option1} | 2. ${q.option2} | 3. ${q.option3} | 4. ${q.option4}</div>
+            <p style="color: var(--secondary); font-size: 14px;"><b><i class="fa-solid fa-circle-check"></i> Sahi Jawab (Official Key):</b> Option ${q.correctKey}</p>
+            <p style="color: ${isCorrectMatch ? 'var(--secondary)' : 'var(--danger)'}; font-size: 14px; margin-bottom: 8px;">
+                <b><i class="fa-solid ${isCorrectMatch ? 'fa-user-check' : 'fa-user-xmark'}"></i> Aapka Chayan (User Choice):</b> ${userDisplayValue}
+            </p>
+            <div class="exp-box">
+                <p style="color: var(--primary); margin-bottom: 5px;"><b><i class="fa-solid fa-graduation-cap"></i> व्याख्या (Solution Content):</b></p>
+                <p>${q.explanation ? q.explanation : 'व्याख्या उपलब्ध नहीं है।'}</p>
+                <div style="border-top: 1px dashed #cbd5e0; margin: 8px 0;"></div>
+                <p style="color: #718096; margin-bottom: 5px;"><b><i class="fa-solid fa-circle-info"></i> अतिरिक्त जानकारी (Key Facts):</b></p>
+                <p>${q.additional ? q.additional : 'अतिरिक्त तथ्य उपलब्ध नहीं हैं।'}</p>
             </div>
         `;
-        listContainer.appendChild(item);
+        solutionWrapper.appendChild(blockNode);
     });
+    
+    // Jump scroll viewport focus straight straight back up to dashboard peak area safely
+    window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-function retakeTest() {
-    location.reload();
-}
-
-window.onload = loadQuizData;
+// Initial Bootstrapper Launcher Execution
+window.onload = () => {
+    loadQuizData();
+};
+                
