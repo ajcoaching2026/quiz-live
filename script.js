@@ -5,7 +5,7 @@ const SHEET_ID = '1AMoTh-nkZRgChqqsIrJlUNPQxSRnXNqxCV6ztt-NbbA';
 const SHEET_TITLE = 'Sheet1';
 
 // Yeh formula aapke dynamic link se direct bina kisi block ke CSV data khench lega
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=${encodeURIComponent(SHEET_TITLE)}`;
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRWSmJ5INf2sHspBSUIsGIVuPwItYqeG1NPWM2d-_D_lguar1Z_9T7KSTtLjj6bLqk4PJlLe8kESdFc/pub?gid=45318566&single=true&output=csv';
 
 let questions = [];
 let userAnswers = {};
@@ -49,12 +49,12 @@ async function loadQuestions() {
         console.log("Successfully parsed questions:", questions);
 
         // Loading screen hatao aur instruction screen dikhao
-        document.getElementById('loading-screen').style.display = 'none';
-        document.getElementById('instruction-screen').style.display = 'block';
+        document.getElementById('loading-profile').style.display = 'none';
+        document.getElementById('instructions-screen').style.display = 'block';
         
     } catch (error) {
         console.error('Error loading quiz data:', error);
-        document.getElementById('loading-text').innerHTML = `
+        document.getElementById('loading-profile').innerHTML = `
             <span style="color:#e74c3c; font-weight:bold;">⚠️ Data Loading Failed!</span><br>
             <small style="color:#555; display:block; margin-top:5px;">
                 Browser Refresh karke check karein. Agar dikkat bani rahe toh sheet ka naam check karein.
