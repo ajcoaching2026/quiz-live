@@ -1,22 +1,23 @@
 // ==========================================================================
-// 1. ENGINE CONFIGURATION & HIGH SECURITY BYPASS GUARD
+// 1. ENGINE CONFIGURATION & DYNAMIC BYPASS LINK (FINAL VERSION)
 // ==========================================================================
 const SHEET_ID = '1AMoTh-nkZRgChqqsIrJlUNPQxSRnXNqxCV6ztt-NbbA'; 
 const SHEET_TITLE = 'Sheet1';
 
-// Bypass URL jo bina publish kiye direct CSV data load karega
+// Yeh formula aapke dynamic link se direct bina kisi block ke CSV data khench lega
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=${encodeURIComponent(SHEET_TITLE)}`;
 
 let questions = [];
 let userAnswers = {};
 let timerInterval;
-let timeLeft = 3600; // 60 minutes default
+let timeLeft = 3600; // 60 Minutes Default Time
 
 // ==========================================================================
-// 2. DATA FETCHING & CSV PARSING ENGINE
+// 2. ULTRA-ROBUST DATA FETCHING & PARSING ENGINE
 // ==========================================================================
 async function loadQuestions() {
     try {
+        console.log("Fetching data from:", SHEET_URL);
         const response = await fetch(SHEET_URL);
         if (!response.ok) throw new Error('Network response was not ok');
         
@@ -24,30 +25,45 @@ async function loadQuestions() {
         const rows = parseCSV(csvText);
         
         if (rows.length <= 1) {
-            throw new Error('No data found in sheet');
+            throw new Error('Sheet khali dikh rahi hai!');
         }
 
-        // Header mapping: [RPSC Que No., Full Question, Option 1, Option 2, Option 3, Option 4, Correct Option]
+        // Row 1 Header ko chhodkar automatic cells map karne ke liye
         questions = rows.slice(1).map((row, index) => {
+            let qText = row[1] ? row[1].trim() : "";
+            
             return {
                 id: row[0] || (index + 1),
-                question: row[1] || '',
-                options: [row[2] || '', row[3] || '', row[4] || '', row[5] || ''],
-                correct: parseInt(row[6]) || 1
+                question: qText,
+                options: [
+                    row[2] || 'Option A', 
+                    row[3] || 'Option B', 
+                    row[4] || 'Option C', 
+                    row[5] || 'Option D'
+                ],
+                // Correct option agar number nahi hai toh default 1 set karega
+                correct: parseInt(row[6]) ? parseInt(row[6]) : 1
             };
-        }).filter(q => q.question.trim() !== '');
+        }).filter(q => q.question !== ""); 
 
-        // Hide loading and show instruction screen
+        console.log("Successfully parsed questions:", questions);
+
+        // Loading screen hatao aur instruction screen dikhao
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('instruction-screen').style.display = 'block';
         
     } catch (error) {
         console.error('Error loading quiz data:', error);
-        document.getElementById('loading-text').innerHTML = `⚠️ Connection Error!<br><small style="color:red;">Please check if Google Sheet sharing is set to 'Anyone with the link can view'.</small>`;
+        document.getElementById('loading-text').innerHTML = `
+            <span style="color:#e74c3c; font-weight:bold;">⚠️ Data Loading Failed!</span><br>
+            <small style="color:#555; display:block; margin-top:5px;">
+                Browser Refresh karke check karein. Agar dikkat bani rahe toh sheet ka naam check karein.
+            </small>
+        `;
     }
 }
 
-// Custom CSV Parser Helper Function
+// Custom Standard CSV Parser (Handles spaces, commas and new lines within cells perfectly)
 function parseCSV(text) {
     let lines = [];
     let row = [""];
@@ -74,23 +90,18 @@ function parseCSV(text) {
     return lines;
 }
 
-// Initialize on window load
+// Window load trigger
 window.onload = () => {
     loadQuestions();
     setupSecurity();
 };
 
 // ==========================================================================
-// 3. SECURITY GUARD & ANTI-CHEAT ENGINE
+// 3. ANTI-CHEAT & SECURITY GUARD
 // ==========================================================================
 function setupSecurity() {
-    // Disable right click
     document.addEventListener('contextmenu', e => e.preventDefault());
-    
-    // Disable text selection
     document.addEventListener('selectstart', e => e.preventDefault());
-    
-    // URL Cleanup/Masking - Developer tools access block
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.pathname);
     }
