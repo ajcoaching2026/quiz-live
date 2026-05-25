@@ -1,119 +1,634 @@
-
 <!DOCTYPE html>
+<!-- TEST -->
 <html lang="hi">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AJ HiNGLISH Academy - CBT Portal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #002b5c;
-            --secondary: #27ae60;
-            --danger: #c0392b;
-            --dark: #2c3e50;
-            --light: #f8f9fa;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
-        body { background-color: #f0f3f6; color: var(--dark); -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-        
-        /* Layout Structure */
-        .header-bar { background: var(--primary); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .coaching-brand { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 16px; }
-        .coaching-brand i { color: #f1c40f; font-size: 20px; }
-        .timer-box { background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px; font-weight: bold; display: flex; align-items: center; gap: 6px; font-size: 15px; }
 
-        .container { width: 100%; max-width: 100%; padding: 12px; margin: 0 auto; }
-        .card { background: white; border-radius: 10px; padding: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        
-        /* Loading Screen */
-        #loading-profile { text-align: center; padding: 50px 20px; font-size: 18px; font-weight: bold; color: var(--primary); }
-        
-        /* Instructions Screen */
-        .ins-title { text-align: center; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 15px; font-size: 18px; }
-        .ins-list { list-style: none; margin-bottom: 20px; }
-        .ins-list li { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 1.5; }
-        .ins-list li i { color: var(--secondary); }
-        .start-btn { background: var(--secondary); color: white; border: none; width: 100%; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(39,174,96,0.3); }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
 
-        /* Quiz Main Screen */
-        .q-header { font-size: 15px; color: #7f8c8d; margin-bottom: 8px; font-weight: bold; text-transform: uppercase; }
-        .question-box { font-size: 17px; font-weight: bold; line-height: 1.6; margin-bottom: 18px; color: #1a252f; word-wrap: break-word; }
-        .options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 70px; }
-        .option-btn { background: #fff; border: 2px solid #ebd3d5; padding: 14px; border-radius: 8px; text-align: left; font-size: 15px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-weight: 500; width: 100%; color: #34495e; }
-        .option-btn:active { transform: scale(0.98); }
-        .option-btn.selected { background: #e8f4fd; border-color: #3498db; color: #2980b9; font-weight: bold; }
+    <title>PYQ TEST</title>
 
-        /* Sticky Footer Controls */
-        .footer-controls { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -3px 15px rgba(0,0,0,0.1); z-index: 90; gap: 8px; }
-        .nav-btn { background: var(--primary); color: white; border: none; padding: 10px 14px; font-weight: bold; border-radius: 5px; font-size: 13px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .nav-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
-        .clear-btn { background: #95a5a6; color: white; border: none; padding: 10px 12px; font-weight: bold; border-radius: 5px; font-size: 13px; cursor: pointer; }
-        .submit-btn { background: var(--danger); color: white; border: none; padding: 10px 15px; font-weight: bold; border-radius: 5px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; animation: pulse 2s infinite; }
+    <!-- FONT AWESOME -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
 
-        /* Side Drawer Menu */
-        .fab-menu-btn { position: fixed; bottom: 75px; right: 15px; background: #34495e; color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 95; font-size: 18px; }
-        .side-drawer { position: fixed; top: 0; right: -290px; width: 280px; height: 100%; background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2); z-index: 200; transition: right 0.3s ease; padding: 20px; overflow-y: auto; }
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); }
-        .drawer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-        .grid-item { background: #f1f2f6; border: 1px solid #dcdde1; height: 40px; border-radius: 5px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; cursor: pointer; }
-        .grid-item.attempted { background: #3498db; color: white; border-color: #2980b9; }
-        .grid-item.active { border: 2px solid var(--primary); animation: borderPulse 1s infinite alternate; }
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; display: none; }
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="style.css">
 
-        /* Scorecard Section */
-        .score-badge-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
-        .score-badge { padding: 12px; border-radius: 6px; text-align: center; color: white; font-weight: bold; font-size: 14px; }
-        .badge-total { background: #34495e; }
-        .badge-correct { background: var(--secondary); }
-        .badge-wrong { background: var(--danger); }
-        .badge-skipped { background: #f39c12; }
-        .final-score-box { background: #edf2f7; border: 2px dashed var(--primary); padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; }
-        .final-score-box h3 { font-size: 22px; color: var(--primary); }
-        .tg-hook-btn { background: #0088cc; color: white; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,136,204,0.3); text-align: center; }
-
-        /* Review Block Solutions */
-        .review-card { border-left: 5px solid #bdc3c7; padding-left: 10px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
-        .review-card.correct-block { border-left-color: var(--secondary); }
-        .review-card.wrong-block { border-left-color: var(--danger); }
-        .review-card h4 { font-size: 15px; margin-bottom: 8px; line-height: 1.5; color: #2c3e50; }
-        .review-card .opts-line { font-size: 13px; color: #7f8c8d; margin-bottom: 8px; }
-        .exp-box { background: #f7fafc; border: 1px solid #edf2f7; border-radius: 6px; padding: 12px; margin-top: 10px; font-size: 14px; line-height: 1.6; }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
-        @keyframes borderPulse { from { border-color: var(--primary); } to { border-color: #3498db; } }
-    </style>
 </head>
-<body oncontextmenu="return false;">
 
-    <div class="header-bar">
+<body>
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
+
+    <header class="header-bar">
+
         <div class="coaching-brand">
+
             <i class="fa-solid fa-graduation-cap"></i>
+
             <span>AJ HiNGLISH Academy</span>
-        </div>
-        <div class="timer-box" id="timer-wrapper" style="display: none;">
-            <i class="fa-regular fa-clock animated"></i>
-            <span id="timer-display">00:00:00</span>
-        </div>
-    </div>
 
-    <div class="container">
-        <div id="loading-profile">
-            <i class="fa-solid fa-spinner fa-spin" style="font-size: 30px; margin-bottom: 15px;"></i>
-            <p>⚡ Securing Data Environment & Loading Exam...</p>
         </div>
 
-        <div id="instructions-screen" class="card" style="display: none;">
-            <h3 class="ins-title" id="ins-exam-name">Loading Exam Profile...</h3>
+        <div
+            class="timer-box"
+            id="timer-box"
+            style="display:none;"
+        >
+
+            <i class="fa-regular fa-clock"></i>
+
+            <span id="timer-display">00:00</span>
+
+        </div>
+
+    </header>
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTAINER -->
+    <!-- ===================================================== -->
+
+    <main class="main-container">
+
+        <!-- ================================================= -->
+        <!-- LOADING SCREEN -->
+        <!-- ================================================= -->
+
+        <div
+            id="loading-screen"
+            class="card text-center"
+        >
+
+            <i
+                class="fa-solid fa-spinner fa-spin"
+                style="
+                    font-size:42px;
+                    color:var(--primary);
+                    margin-bottom:15px;
+                "
+            ></i>
+
+            <p>
+                ⚡ Securing Data Environment & Loading Exam...
+            </p>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- INSTRUCTIONS SCREEN -->
+        <!-- ================================================= -->
+
+        <div
+            id="instructions-screen"
+            class="card"
+            style="display:none;"
+        >
+
+            <h3
+                class="ins-title"
+                id="ins-exam-name"
+            >
+
+                <i class="fa-solid fa-book-open"></i>
+
+                Loading Exam...
+
+            </h3>
+
             <ul class="ins-list">
-                <li><i class="fa-solid fa-circle-question"></i> <span><b>कुल प्रश्न (Total Questions):</b> <span id="ins-total-q">0</span></span></li>
-                <li><i class="fa-solid fa-award"></i> <span><b>कुल अंक (Total Marks):</b> <span id="ins-total-marks">0</span></span></li>
-                <li><i class="fa-solid fa-check-double"></i> <span><b>सही उत्तर स्कीम (Marking Scheme):</b> +3 Marks</span></li>
-                <li><i class="fa-solid fa-circle-xmark"></i> <span><b>गलत उत्तर स्कीम (Negative Mark):</b> -1 Mark</span></li>
-                <li><i class="fa-solid fa-clock"></i> <span><b>निर्धारित समय (Calculated Duration):</b> <span id="ins-total-time">0</span></span></li>
-                <li><i class="fa-solid fa-ban"></i> <span><b>Option 5:</b> उत्तर न देने की स्थिति में "Question not attempted" चुनें।</span></li>
-                <li><i class="fa-solid fa-shield-halved"></i> <span><b>सुरक्षा गार्ड:</b> स्क्रीन कॉपी, स्क्रीनशॉट एवं राइट-क्लिक पूर्णतः वर्जित है।</span></li>
+
+                <li>
+
+                    <i class="fa-solid fa-circle-question"></i>
+
+                    <span>
+
+                        <b>Total Questions:</b>
+
+                        <span id="ins-total-q">0</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-award"></i>
+
+                    <span>
+
+                        <b>Total Marks:</b>
+
+                        <span id="ins-total-marks">0</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-check-double"></i>
+
+                    <span>
+
+                        <b>Correct Marks:</b>
+
+                        <span id="ins-correct-marks">+1</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-circle-xmark"></i>
+
+                    <span>
+
+                        <b>Negative Marks:</b>
+
+                        <span id="ins-negative-marks">-0.25</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <span>
+
+                        <b>Duration:</b>
+
+                        <span id="ins-total-time">0</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-ban"></i>
+
+                    <span>
+
+                        <b>Option 5:</b>
+
+                        Question Not Attempted
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <span>
+
+                        <b>Security:</b>
+
+                        Copy/Paste & Right Click Disabled
+
+                    </span>
+
+                </li>
+
             </ul>
-            <button class="start-btn" id="start-exam-btn">
-                <i class="fa-solid fa-play"></i> ▶
-                
+
+            <button
+                onclick="startExam()"
+                class="btn btn-success"
+                style="
+                    width:100%;
+                    margin-top:20px;
+                    padding:14px;
+                "
+            >
+
+                <i class="fa-solid fa-play"></i>
+
+                Start Test Now
+
+            </button>
+
+        </div>
+        <!-- ================================================= -->
+        <!-- QUIZ SCREEN -->
+        <!-- ================================================= -->
+
+        <div
+            id="quiz-screen"
+            class="exam-layout"
+            style="display:none;"
+        >
+
+            <!-- ============================================= -->
+            <!-- QUESTION COLUMN -->
+            <!-- ============================================= -->
+
+            <div class="question-column">
+
+                <div class="card question-card">
+
+                    <!-- QUESTION HEADER -->
+
+                    <div class="q-header">
+
+                        <span
+                            class="q-number"
+                            id="current-q-num"
+                        >
+                            Question #0
+                        </span>
+
+                        <span class="q-timer">
+
+                            <i class="fa-solid fa-bolt"></i>
+
+                            CBT LIVE
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- QUESTION TEXT -->
+
+                    <div
+                        class="q-text"
+                        id="question-text"
+                    >
+
+                        Loading Question...
+
+                    </div>
+
+
+                    <!-- OPTIONS -->
+
+                    <div
+                        class="options-container"
+                        id="options-container"
+                    >
+                    </div>
+
+
+                    <!-- ACTION BUTTONS -->
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:10px;
+                            margin-top:20px;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <button
+                            id="back-btn"
+                            class="btn btn-secondary"
+                            onclick="navigateBack()"
+                        >
+
+                            <i class="fa-solid fa-chevron-left"></i>
+
+                            Back
+
+                        </button>
+
+
+                        <button
+                            class="btn btn-warning"
+                            onclick="clearResponse()"
+                        >
+
+                            <i class="fa-solid fa-eraser"></i>
+
+                            Clear
+
+                        </button>
+
+
+                        <button
+                            id="next-btn"
+                            class="btn btn-primary"
+                            onclick="navigateNext()"
+                            style="margin-left:auto;"
+                        >
+
+                            Next
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- PALETTE COLUMN -->
+            <!-- ============================================= -->
+
+            <div
+                class="palette-column"
+                id="right-sidebar"
+            >
+
+                <div class="card palette-card">
+
+                    <h4>
+
+                        <i class="fa-solid fa-table-cells"></i>
+
+                        Question Palette
+
+                    </h4>
+
+                    <div
+                        class="palette-grid"
+                        id="palette-grid"
+                    >
+                    </div>
+
+
+                    <!-- STATUS COUNTS -->
+
+                    <div
+                        style="
+                            margin-top:20px;
+                            display:flex;
+                            flex-direction:column;
+                            gap:10px;
+                            font-size:14px;
+                        "
+                    >
+
+                        <div>
+
+                            ✅ Answered:
+                            <span id="count-answered">0</span>
+
+                        </div>
+
+                        <div>
+
+                            ⚠️ Skipped:
+                            <span id="count-skipped">0</span>
+
+                        </div>
+
+                        <div>
+
+                            ⭕ Not Visited:
+                            <span id="count-not-visited">0</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- ================================================= -->
+        <!-- RESULT SCREEN -->
+        <!-- ================================================= -->
+
+        <div
+            id="result-screen"
+            class="card"
+            style="display:none;"
+        >
+
+            <!-- RESULT HEADER -->
+
+            <div class="result-header text-center">
+
+                <i
+                    class="fa-solid fa-circle-check"
+                    style="
+                        font-size:55px;
+                        color:var(--secondary);
+                    "
+                ></i>
+
+                <h2>
+
+                    परीक्षा सफलतापूर्वक सबमिट हुई!
+
+                </h2>
+
+                <p>
+
+                    Detailed Performance Analysis
+
+                </p>
+
+            </div>
+
+
+            <!-- SCORE GRID -->
+
+            <div class="score-grid">
+
+                <div class="score-card">
+
+                    <span
+                        class="score-val"
+                        id="res-score"
+                    >
+                        0
+                    </span>
+
+                    <span class="score-lbl">
+
+                        Score
+
+                    </span>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <span
+                        class="score-val"
+                        id="res-total-q"
+                    >
+                        0
+                    </span>
+
+                    <span class="score-lbl">
+
+                        Total Questions
+
+                    </span>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <span
+                        class="score-val"
+                        id="res-correct"
+                        style="color:var(--secondary);"
+                    >
+                        0
+                    </span>
+
+                    <span class="score-lbl">
+
+                        Correct
+
+                    </span>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <span
+                        class="score-val"
+                        id="res-wrong"
+                        style="color:var(--danger);"
+                    >
+                        0
+                    </span>
+
+                    <span class="score-lbl">
+
+                        Wrong
+
+                    </span>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <span
+                        class="score-val"
+                        id="res-unattempted"
+                    >
+                        0
+                    </span>
+
+                    <span class="score-lbl">
+
+                        Unattempted
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- RESULT ACTION BUTTONS -->
+
+            <div
+                style="
+                    margin-top:25px;
+                    display:flex;
+                    gap:10px;
+                    flex-wrap:wrap;
+                "
+            >
+
+                <button
+                    onclick="restartQuiz()"
+                    class="btn btn-primary"
+                    style="flex:1;"
+                >
+
+                    <i class="fa-solid fa-rotate-right"></i>
+
+                    Restart Test
+
+                </button>
+
+
+                <a
+                    id="telegram-btn-link"
+                    href="#"
+                    target="_blank"
+                    class="btn btn-warning"
+                    style="
+                        flex:1;
+                        text-align:center;
+                        text-decoration:none;
+                    "
+                >
+
+                    <i class="fa-brands fa-telegram"></i>
+
+                    Join Telegram
+
+                </a>
+
+            </div>
+
+
+            <!-- ANALYSIS CONTAINER -->
+
+            <div
+                id="analysis-container"
+                style="margin-top:30px;"
+            >
+            </div>
+
+        </div>
+
+    </main>
+    <!-- ===================================================== -->
+    <!-- MOBILE PALETTE BUTTON -->
+    <!-- ===================================================== -->
+
+    <button
+        id="floating-submit-btn"
+        class="fab-palette-trigger"
+        style="display:none;"
+        onclick="toggleSidebar()"
+    >
+
+        <i class="fa-solid fa-table-cells"></i>
+
+    </button>
+
+
+    <!-- ==================================================== -->
+    <!-- CONFIG FILE -->
+    <!-- ===================================================== -->
+
+    <script src="config.js"></script>
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN SCRIPT -->
+    <!-- ===================================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
