@@ -132,3 +132,66 @@ FINAL REQUIRED CLASSES
     background:#f8fafc;
     border-left:4px solid var(--primary);
 }
+/* =========================================================
+PREMIUM HERO SECTION
+========================================================= */
+
+.hero-box{
+
+    background:linear-gradient(
+        135deg,
+        #1e3c72,
+        #2a5298
+    );
+
+    border-radius:24px;
+
+    padding:40px 20px;
+
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:20px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+
+}
+
+.hero-icon{
+
+    font-size:60px;
+
+    margin-bottom:15px;
+
+}
+
+.hero-title{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+
+    line-height:1.2;
+
+}
+
+.hero-subtitle{
+
+    font-size:18px;
+
+    opacity:0.9;
+
+}
+
+@media(max-width:768px){
+
+    .hero-title{
+
+        font-size:32px;
+
+    }
+
+}
