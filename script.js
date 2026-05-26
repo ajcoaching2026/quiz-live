@@ -114,7 +114,7 @@ async function loadQuestions() {
                     row[16] ||
                     QUIZ_CONFIG.fallbackExamName,
 
-                telegramLink:
+                                     telegramLink:
                     row[17] ||
                     QUIZ_CONFIG.defaultTelegramLink
 
