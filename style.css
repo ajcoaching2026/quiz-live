@@ -1,3 +1,44 @@
+body{
+
+    margin:0;
+
+    padding:0;
+
+    background:#f1f5f9;
+
+    font-family:'Poppins',sans-serif;
+
+    color:#1e293b;
+
+}
+
+.main-container{
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:20px;
+
+}
+
+.card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+
+}
+
+.text-center{
+
+    text-align:center;
+
+}
 :root{
     --primary:#002b5c;
     --secondary:#27ae60;
@@ -131,67 +172,4 @@ FINAL REQUIRED CLASSES
     border-radius:8px;
     background:#f8fafc;
     border-left:4px solid var(--primary);
-}
-/* =========================================================
-PREMIUM HERO SECTION
-========================================================= */
-
-.hero-box{
-
-    background:linear-gradient(
-        135deg,
-        #1e3c72,
-        #2a5298
-    );
-
-    border-radius:24px;
-
-    padding:40px 20px;
-
-    text-align:center;
-
-    color:white;
-
-    margin-bottom:20px;
-
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
-
-}
-
-.hero-icon{
-
-    font-size:60px;
-
-    margin-bottom:15px;
-
-}
-
-.hero-title{
-
-    font-size:42px;
-
-    font-weight:800;
-
-    margin-bottom:10px;
-
-    line-height:1.2;
-
-}
-
-.hero-subtitle{
-
-    font-size:18px;
-
-    opacity:0.9;
-
-}
-
-@media(max-width:768px){
-
-    .hero-title{
-
-        font-size:32px;
-
-    }
-
 }
