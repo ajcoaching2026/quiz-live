@@ -21,81 +21,11 @@
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
 
 <body>
-<header class="hero-header">
-    <div class="header-logo">📝</div>
 
-    <h1>AJ HiNGLISH Academy</h1>
-
-    <p class="subtitle">
-        Premium CBT Mock Test Portal
-    </p>
-</header>
-
-<div class="stats-grid">
-
-    <div class="stat-card">
-        <div class="stat-icon">❓</div>
-
-        <div class="stat-info">
-            <h3>Total Questions</h3>
-
-            <p id="total-questions-count">100</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">🎯</div>
-
-        <div class="stat-info">
-            <h3>Total Marks</h3>
-
-            <p id="total-marks-count">100</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">⚠️</div>
-
-        <div class="stat-info">
-            <h3>Negative Marking</h3>
-
-            <p>-0.33</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">⏱️</div>
-
-        <div class="stat-info">
-            <h3>Total Duration</h3>
-
-            <p id="test-duration-time">90 Mins</p>
-        </div>
-    </div>
-
-</div>
-
-<div class="action-section">
-
-<button
-    onclick="startExam()"
-    id="start-btn"
-    class="glow-btn"
->
-
-        <span>Start Examination</span>
-
-        <i class="fas fa-rocket"></i>
-
-    </button>
-
-</div>
     <!-- ===================================================== -->
     <!-- HEADER -->
     <!-- ===================================================== -->
@@ -157,9 +87,148 @@
 
 
         <!-- ================================================= -->
-       
+        <!-- INSTRUCTIONS SCREEN -->
+        <!-- ================================================= -->
+
+        <div
+            id="instructions-screen"
+            class="card"
+            style="display:none;"
+        >
+
+            <h3
+                class="ins-title"
+                id="ins-exam-name"
+            >
+
+                <i class="fa-solid fa-book-open"></i>
+
+                Loading Exam...
+
+            </h3>
+
+            <ul class="ins-list">
+
+                <li>
+
+                    <i class="fa-solid fa-circle-question"></i>
+
+                    <span>
+
+                        <b>Total Questions:</b>
+
+                        <span id="ins-total-q">0</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-award"></i>
+
+                    <span>
+
+                        <b>Total Marks:</b>
+
+                        <span id="ins-total-marks">0</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-check-double"></i>
+
+                    <span>
+
+                        <b>Correct Marks:</b>
+
+                        <span id="ins-correct-marks">+1</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-circle-xmark"></i>
+
+                    <span>
+
+                        <b>Negative Marks:</b>
+
+                        <span id="ins-negative-marks">-0.25</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <span>
+
+                        <b>Duration:</b>
+
+                        <span id="ins-total-time">0</span>
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-ban"></i>
+
+                    <span>
+
+                        <b>Option 5:</b>
+
+                        Question Not Attempted
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <span>
+
+                        <b>Security:</b>
+
+                        Copy/Paste & Right Click Disabled
+
+                    </span>
+
+                </li>
+
+            </ul>
+
+            <button
+                onclick="startExam()"
+                class="btn btn-success"
+                style="
+                    width:100%;
+                    margin-top:20px;
+                    padding:14px;
+                "
+            >
+
+                <i class="fa-solid fa-play"></i>
+
+                Start Test Now
+
+            </button>
+
+        </div>
+        <!-- ================================================= -->
         <!-- QUIZ SCREEN -->
-        <!-- =====================================<button type="submit"></button>============ -->
+        <!-- ================================================= -->
 
         <div
             id="quiz-screen"

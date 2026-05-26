@@ -301,6 +301,9 @@ function initializeExamProfile() {
 
 function startExam() {
 
+    document.getElementById(
+        "instructions-screen"
+    ).style.display = "none";
 
     document.getElementById(
         "quiz-screen"
