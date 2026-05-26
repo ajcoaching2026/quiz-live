@@ -180,3 +180,12 @@ FINAL REQUIRED CLASSES
     flex-wrap:wrap;
     gap:10px;
 }
+.instructions-box{
+    overflow:hidden;
+}
+
+.instructions-box a{
+    word-break:break-all;
+    font-size:18px;
+    font-weight:600;
+}
